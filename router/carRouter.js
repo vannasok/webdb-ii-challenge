@@ -32,12 +32,42 @@ router.post('/', (req, res) => {
    const data = req.body;
 
    db('cars')
-      .insert(data, 'id')
+      .insert(data)
       .then(car => {
          res.status(200).json({ message: 'Cars Added.' });
       })
       .catch(error => {
          res.status(500).json({ error: 'Could Not Upload The Data. ' });
+      });
+});
+
+// Delete ####################
+router.delete('/:id', (req, res) => {
+   const id = req.params.id;
+   db('cars')
+      .where({ id })
+      .del()
+      .then(car => {
+         res.status(200).json({ message: 'Car Deleted' });
+      })
+      .catch(err => {
+         console.log(err);
+         res.status(500).json({ error: 'Could Not Delete Data !' });
+      });
+});
+
+// Edit ###################
+router.put('/:id', (req, res) => {
+   const id = req.params.id;
+   const changes = req.body;
+   db('cars')
+      .where({ id })
+      .update(changes)
+      .then(updated => {
+         res.status(200).json(updated);
+      })
+      .catch(err => {
+         res.status(500).json({ error: 'Could Not Change the Data !' });
       });
 });
 
